@@ -1,0 +1,70 @@
+{% extends 'bookmyhotel/base.html' %}
+
+{% load static chatextras %}
+
+
+{% block title %}{{ title }}{% endblock %}
+
+
+{% block content %}
+
+<div class="mb-4">
+    <b>Room ID: </b>{{room.room_id}}</br>
+    <b>Page: </b>{{room.url}}</br>
+    <b>Client: </b>{{room.client.name}}</br>
+    <b>Agent: </b>{% firstof room.agent.name 'Not yet...' %}</br>
+    <b>Status: </b>{{room.status}}</br>
+</div>
+
+<hr>
+
+<div id="chat_log" class="mt-4 p-4 h-[450px] overflow-y-scroll bg-gray-600 rounded-xl">
+    {% for message in room.messages.all %}
+        <div class="flex w-full max-w-md mt-2 space-x-3 {% if not message.sent_by.role == 'customer' %} ml-auto justify-end {% endif %}">
+            
+            {% if message.sent_by.role == 'customer' %}
+                <div class="flex-shrink-0 h-10 w-10 rounded-full bg-gray-800 text-center pt-2">
+                    {{message.sent_by.name|initials}}
+                </div>
+            {% endif %}
+
+                <div>
+                    <div class="p-3 {% if not message.sent_by.role == 'customer' %} bg-blue-700 rounded-br-2xl rounded-l-lg {% else %} bg-gray-800 rounded-bl-2xl rounded-r-lg {% endif %}">
+                        <p>{{message.body}}</p>
+                    </div>
+
+                    <span class="text-xs text-gray-200 leading-none">{{message.created_at|timesince}} ago</span>
+                </div>
+
+            {% if not message.sent_by.role == 'customer' %}
+                <div class="flex-shrink-0 h-10 w-10 rounded-full bg-blue-700 text-center pt-2">
+                    {{message.sent_by.name|initials}}
+                </div>
+            {% endif %}
+            
+        </div>
+    {% endfor %}
+</div>
+
+<hr class="mt-4">
+
+{% if room.status == 'active' %}
+<div>
+    <input id="chat_message_input" type="text" name="message" class="w-full mt-4 mb-4 py-2 px-4 bg-gray-300 text-black rounded-xl" placeholder="Type your message...">
+
+    <button id="chat_message_submit" class="py-2 px-4 bg-slate-600 rounded-xl hover:bg-slate-700">Send</button>
+</div>
+{% endif %}
+
+{% endblock %}
+
+
+{% block scripts %}
+    {% if room.status == 'active' %}
+        {{room.room_id|json_script:'room_id'}}
+        {{request.user.name|json_script:'user_name'}}
+        {{request.user.id|json_script:'user_id'}}
+
+        <script src="{% static 'bookmyhotel/js/main_admin.js' %}"></script>
+    {% endif %}
+{% endblock %}

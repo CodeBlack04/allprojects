@@ -1,0 +1,41 @@
+{% extends 'core/base.html' %}
+
+
+{% block title %} Login {% endblock %}
+
+
+{% block content %}
+<div class="w-1/2 my-auto mx-auto p-6 bg-slate-800 rounded-xl">
+    <h1 class="mb-6 text-center text-3xl">Login</h1>
+
+    <form action="." method="post">
+        {% csrf_token %}
+
+        <div class="mb-3">
+            <label class="inline-block mb-3">Enter your email address:</label><br>
+            {{ form.username }}
+        </div>
+
+        <div class="mb-3">
+            <label class="inline-block mb-3">Create a password:</label><br>
+            {{ form.password }}
+        </div>
+
+        {% if form.errors or form.non_field_errors %}
+            <div class="mb-3 p-6 bg-red-300 text-gray-800 rounded-xl">
+                {% for field in form %}
+                    {{ field.errors }}
+                {% endfor %}
+
+                {{ form.non_field_errors }}
+            </div>  
+        {% endif %}  
+
+        <div class="mb-3">
+            <button class="w-20 text-center px-3 py-2 bg-gray-600 rounded-xl hover:bg-gray-700 transition ease-in-out duration-300">Login</button>
+        </div>
+
+        <p>Forgot password? <a href="{% url 'core:password_reset' %} " class="text-blue-700 hover:text-blue-900">Reset password</a></p>
+
+    </form>
+{% endblock %}

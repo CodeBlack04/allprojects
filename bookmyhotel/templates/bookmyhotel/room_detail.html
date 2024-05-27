@@ -1,0 +1,99 @@
+{% extends 'bookmyhotel/base.html' %}
+{% load static %}
+
+
+{% block title %}{{ title }}{% endblock %}
+
+
+{% block style %}
+<style>
+
+    .slide {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      opacity: 0; /* Make slides invisible */
+      transition: opacity 0.5s ease-in-out; /* Smooth transition for fade in/out */
+    }
+
+    #calendar {
+    border-collapse: separate;
+    border-spacing: 5px; /* adjust the value as needed */
+    }
+
+    #calendar td {
+        height: 35px;
+        width: 35px;
+        border-radius: 8px;
+        text-align: center;
+    }
+
+    #calendar td.available {
+        background-color: rgb(5 150 105); /* Light green for available days */
+    }
+
+    #calendar td.booked {
+        background-color: rgb(190 18 60); /* Light red for booked days */
+    }
+
+    #calendar td.empty {
+        background-color: rgb(75 85 99); /* Light grey for empty cells */
+    }
+
+</style>
+{% endblock %}
+
+
+{% block content %}
+<div class="max-w-screen-xl mx-auto px-4 sm:px-6 lg:px-8">
+
+    <h1 class="text-center text-2xl font-semibold">{{hotel_room.get_room_type_display}} Room</h1>
+
+    <!-- Sliding photos section -->
+    <div class="max-w-screen-xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+        <!-- Slider -->
+        <div id="slider" class="h-[350px] md:h-[450px] flex overflow-hidden shadow-2xl relative rounded-xl border-8 border-slate-900">
+            <!-- Foreach loop for displaying hotel images -->
+            {% if hotel_room.images.all %}
+                {% for image in hotel_room.images.all %}
+                <div class="slide min-w-full flex-shrink-0">
+                    <img src="{{ image.image.url }}" class="w-full h-full object-cover" alt="{{ hotel_room.room_number }}">
+                </div>
+                {% endfor %}
+            {% else %}
+                <div class="w-full bg-gray-800 rounded-lg flex items-center justify-center">
+                    <span class="text-gray-500">No image available</span>
+                </div>
+            {% endif %}
+        </div>
+        <!-- Dots container -->
+        <div class="dots-container flex justify-center p-4">
+            {% for image in hotel_room.images.all %}
+            <span class="dot cursor-pointer rounded-full h-3 w-3 mx-1 mb-1 bg-white inline-block"></span>
+            {% endfor %}
+        </div>
+    </div>
+
+    <hr class="w-3/5 mx-auto border-4 rounded-full border-slate-800">
+
+    <h1 class="mt-6 mb-6 text-center text-2xl font-semibold">Room Details</h1>
+
+    {% include 'bookmyhotel/room_info.html' %}
+
+    <hr class="w-3/5 mx-auto border-4 rounded-full border-slate-800">
+
+    <h1 class="mt-6 mb-6 text-center text-2xl font-semibold">Book Room</h1>
+        
+    {% include 'bookmyhotel/book_room.html' %}
+
+    
+
+</div>
+{% endblock %}
+
+
+{% block scripts %}
+    <script src="{% static 'bookmyhotel/js/slideshow.js' %}"></script>
+{% endblock %}

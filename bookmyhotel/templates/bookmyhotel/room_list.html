@@ -1,0 +1,41 @@
+<div class="w-11/12 mx-auto mb-10 flex flex-col gap-4 overflow-y-auto rounded-xl">
+    <!-- Repeat this block for each room -->
+    {% for room in hotel.rooms.all %}
+    <div class="bg-slate-800 flex flex-col md:flex-row gap-4 p-4 rounded-xl shadow-lg">
+
+        {% with room.images.all as images %}
+        {% if images %}
+        <div class="w-full h-80 md:w-1/3 md:h-60 bg-white rounded-lg overflow-hidden">
+            <img src="{{ images.0.image.url }}" alt="{{ room.room_number }}" class="w-full h-full object-cover">
+        </div>
+        {% else %}
+        <div class="w-full h-80 md:w-1/3 md:h-60 bg-gray-800 rounded-lg flex items-center justify-center">
+            <span class="text-gray-500">No image available</span>
+        </div>
+        {% endif %}
+        {% endwith %}
+
+        <div class="w-full md:w-2/3 p-2 flex flex-col justify-start md:justify-around bg-gray-700 rounded-xl">
+
+            <div class="px-4 py-2">
+                <h3 class="text-2xl font-bold text-gray-300">{{ room.get_room_type_display }} Room</h3>
+            </div>
+
+            <div class="px-4 py-2">
+                <h3 class="text-xl font-semibold text-gray-400">Room Number {{ room.room_number }}</h3>
+            </div>
+
+            <div class="px-4 py-2">
+                <p class="text-emerald-500">Price: {{ room.price }}</p>
+            </div>
+
+            <div class="px-4 py-2">
+                <a href="{% url 'bookmyhotel:hotel-room-detail' room.id %}" class="inline-block py-1 px-3 bg-emerald-600 text-white rounded-xl hover:bg-emerald-700 transition ease-in-out duration-300">
+                    Details
+                </a>
+            </div>
+
+        </div>
+    </div>
+    {% endfor %}
+</div>

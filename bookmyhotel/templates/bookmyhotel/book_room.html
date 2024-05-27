@@ -1,0 +1,63 @@
+<div  class="w-11/12 mx-auto mb-10 p-4 flex flex-col items-center md:flex-row md:justify-evenly md:items-center bg-slate-800 rounded-xl shadow-2xl">
+
+    <form method="post" action="/bookmyhotel/rooms/{{hotel_room.id}}/book-room/" class="p-4 w-4/5 sm:w-2/3 md:w-1/3">
+        {% csrf_token %}
+
+        <div class="mb-2">
+            <label class="inline-block mb-3">Check-in date:</label><br>
+            {{ booking_form.start_date }}
+        </div>
+
+        <div class="mb-2">
+            <label class="inline-block mb-3">Check-out date:</label><br>
+            {{ booking_form.end_date }}
+        </div>
+
+        <!-- {{ booking_form.as_p }} -->
+
+        {% if booking_form.errors or booking_form.non_field_errors %}
+        <div class="mb-2 p-6 bg-red-300 text-gray-800 rounded-xl">  
+            {% for field in booking_form %}
+                {{ field.errors }}
+            {% endfor %}
+
+            {{ booking_form.non_field_errors }}
+        </div>  
+        {% endif %} 
+
+        <div class="mt-5 flex justify-center items-center">
+            <button class="inline-block text-center px-3  py-1 text-md bg-emerald-600 rounded-xl shadow-2xl hover:bg-emerald-700 transition ease-in-out duration-300">Book Now</button>
+        </div>
+    </form>
+
+    <!-- This presumes that 'availability' is a list of tuples (date, is_available) sorted by date -->
+    <div>
+        <table id="calendar">
+            <thead>
+            <tr>
+                <th>Mon</th>
+                <th>Tue</th>
+                <th>Wed</th>
+                <th>Thu</th>
+                <th>Fri</th>
+                <th>Sat</th>
+                <th>Sun</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for week, days in availability_calendar.items %}
+                <tr>
+                {% for day_info in days %}
+                    {% if day_info %}
+                    <td class="{{ day_info.1|lower }}">{{ day_info.0 }}</td>
+                    {% else %}
+                    <td class="empty">&nbsp;</td> <!-- Empty cell for padding -->
+                    {% endif %}
+                {% endfor %}
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+</div>

@@ -1,0 +1,60 @@
+<div class="w-11/12 mx-auto p-4 flex justify-evenly items-center bg-slate-800 rounded-xl">
+    <form method="post" action="." class="p-4 w-1/3">
+        {% csrf_token %}
+
+        <div class="mb-2">
+            <label class="inline-block mb-3">Start date:</label><br>
+            {{ form.start_date }}
+        </div>
+
+        <div class="mb-2">
+            <label class="inline-block mb-3">End date:</label><br>
+            {{ form.end_date }}
+        </div>
+
+        <!-- {{ form.as_p }} -->
+
+        {% if form.errors or form.non_field_errors %}
+        <div class="mb-2 p-6 bg-red-300 text-gray-800 rounded-xl">  
+            {% for field in form %}
+                {{ field.errors }}
+            {% endfor %}
+
+            {{ form.non_field_errors }}
+        </div>  
+        {% endif %} 
+
+        <div class="mt-2 flex justify-center items-center">
+            <button class="inline-block text-center px-3 py-2 bg-emerald-600 rounded-xl hover:bg-emerald-700">Book Room</button>
+        </div>
+    </form>
+<!-- This presumes that 'availability' is a list of tuples (date, is_available) sorted by date -->
+    <div>
+    <table id="calendar" class="p-4">
+        <thead>
+        <tr>
+            <th>Mon</th>
+            <th>Tue</th>
+            <th>Wed</th>
+            <th>Thu</th>
+            <th>Fri</th>
+            <th>Sat</th>
+            <th>Sun</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for week, days in availability_calendar.items %}
+            <tr>
+            {% for day_info in days %}
+                {% if day_info %}
+                <td class="{{ day_info.1|lower }}">{{ day_info.0 }}</td>
+                {% else %}
+                <td class="empty">&nbsp;</td> <!-- Empty cell for padding -->
+                {% endif %}
+            {% endfor %}
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+    </div>
+</div>

@@ -1,0 +1,11 @@
+<div class="w-11/12 mx-auto mb-10 py-8 flex flex-col gap-4 bg-slate-800 overflow-y-auto rounded-xl shadow-2xl">
+    <!-- Repeat this block for each room -->
+    <ul class="mx-16 flex flex-col gap-5 list-disc">
+    {% for amenity in hotel.amenities.all %}
+        <div>
+            <li class="text-xl mb-1">{{ amenity.amenity_name }}</li>
+            <p>{{ amenity.description }}</p>
+        </div>
+    {% endfor %}
+    </ul>
+</div>

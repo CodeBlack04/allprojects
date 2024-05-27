@@ -1,0 +1,115 @@
+{% extends 'bookmyhotel/base.html' %}
+{% load static %}
+
+
+{% block title %}{{ title }}{% endblock %}
+
+
+{% block style %}
+<style>
+
+    .slide {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      opacity: 0; /* Make slides invisible */
+      transition: opacity 0.5s ease-in-out; /* Smooth transition for fade in/out */
+    }
+
+</style>
+{% endblock %}
+
+
+{% block content %}
+<div class="max-w-screen-xl mx-auto px-4 sm:px-6 lg:px-8">
+
+    <h1 class="mb-6 text-center text-2xl font-semibold">{{hotel.hotel_name}}</h1>
+
+    <!-- Sliding photos section -->
+    <div class="max-w-screen-xl mx-auto px-4 sm:px-6 lg:px-8">
+        <!-- Slider -->
+        <div id="slider" class="h-[350px] md:h-[450px] flex overflow-hidden shadow-2xl relative rounded-xl border-8 border-slate-900">
+            <!-- Foreach loop for displaying hotel images -->
+            {% if hotel.images.all %}
+                {% for image in hotel.images.all %}
+                <div class="slide min-w-full flex-shrink-0">
+                    <img src="{{ image.image.url }}" class="w-full h-full object-cover" alt="{{ hotel.hotel_name }}">
+                </div>
+                {% endfor %}
+            {% else %}
+                <div class="w-full bg-gray-800 rounded-lg flex items-center justify-center">
+                    <span class="text-gray-500">No image available</span>
+                </div>
+            {% endif %}
+        </div>
+        <!-- Dots container -->
+        <div class="dots-container flex justify-center p-4">
+            {% for image in hotel.images.all %}
+            <span class="dot cursor-pointer rounded-full h-3 w-3 mx-1 mb-1 bg-white inline-block"></span>
+            {% endfor %}
+        </div>
+    </div>
+
+    <hr class="w-3/5 mx-auto border-4 rounded-full border-slate-800">
+
+    <!-- Room list section -->
+    <h1 class="mt-6 mb-6 text-center text-2xl font-semibold">Rooms</h1>
+
+    {% include 'bookmyhotel/room_list.html' %}
+
+    <hr class="w-3/5 mx-auto border-4 rounded-full border-slate-800">
+
+    <!-- Facilities section -->
+    <h1 class="mt-6 mb-6 text-center text-2xl font-semibold">Our Facilities</h1>
+
+    {% include 'bookmyhotel/facilities.html' %}
+
+    <hr class="w-3/5 mx-auto border-4 rounded-full border-slate-800">
+
+    <!-- Location section -->
+    <h1 class="mt-6 mb-6 text-center text-2xl font-semibold">Location</h1>
+
+    <div id="map" class="w-11/12 mb-10 mx-auto h-[400px] rounded-xl bg-slate-800 shadow-2xl"></div>
+
+    <hr class="w-3/5 mx-auto border-4 rounded-full border-slate-800">
+
+    <!-- Rate Hotel section -->
+    <h1 class="mt-6 mb-6 text-center text-2xl font-semibold">Rate {{ hotel.hotel_name }}</h1>
+
+    {% include 'bookmyhotel/rate_hotel.html' %}
+
+    <hr class="w-3/5 mx-auto border-4 rounded-full border-slate-800">
+
+    <!-- Reviews section -->
+    <h1 class="mt-6 mb-6 text-center text-2xl font-semibold">Reviews</h1>
+
+    {% include 'bookmyhotel/review_list.html' %}
+
+    <hr class="w-3/5 mx-auto border-4 rounded-full border-slate-800">
+
+    
+</div>
+{% endblock %}
+
+
+{% block scripts %}
+<script src="{% static 'bookmyhotel/js/slideshow.js' %}"></script>
+
+<!-- <script>
+    function initMap() {
+        var hotelLocation = {lat: hotel.latitude, lng: hotel.longitude};
+        var map = new google.maps.Map(document.getElementById('map'), {
+            zoom: 15,
+            center: hotelLocation
+        });
+        var marker = new google.maps.Marker({
+            position: hotelLocation,
+            map: map
+        });
+    }
+</script>
+
+<script async defer src="https://maps.googleapis.com/maps/api/js?key=YOUR_API_KEY&callback=initMap"></script> -->
+{% endblock %}
