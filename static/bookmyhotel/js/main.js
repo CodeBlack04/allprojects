@@ -54,7 +54,7 @@ const joinChatRoom = async () => {
             console.log('data', data)
         })
 
-        chatSocket = new WebSocket(`ws://${window.location.host}/ws/${chatRoomId}/`)
+        chatSocket = new WebSocket(`ws://${window.location.host}/ws/bookmyhotel/${chatRoomId}/`)
 
         chatSocket.onopen = (e) => {
             console.log('onOpen - Websocket was opened')

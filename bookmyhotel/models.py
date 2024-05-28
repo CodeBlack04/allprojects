@@ -76,7 +76,7 @@ class Hotel(BaseModel):
     
 class HotelImage(BaseModel):
     hotel = models.ForeignKey(Hotel, related_name='images', on_delete=models.CASCADE)
-    image = models.ImageField(upload_to='hotel_images')
+    image = models.ImageField(upload_to='bookmyhotel/hotel_images')
 
     def __str__(self):
         return f"Image for {self.hotel.hotel_name}"
@@ -111,7 +111,7 @@ class HotelRoom(BaseModel):
     
 class HotelRoomImage(BaseModel):
     hotel_room = models.ForeignKey(HotelRoom, related_name='images', on_delete=models.CASCADE)
-    image = models.ImageField(upload_to='hotel_room_images')
+    image = models.ImageField(upload_to='bookmyhotel/hotel_room_images')
 
     def __str__(self):
         return f"Image for room {self.hotel_room.room_number} at {self.hotel_room.hotel.hotel_name}"

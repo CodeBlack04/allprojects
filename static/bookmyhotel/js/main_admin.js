@@ -18,7 +18,7 @@ const chatSubmitElement = document.querySelector('#chat_message_submit')
 
 
 /* Websocket build */
-chatSocket = new WebSocket(`ws://${window.location.host}/ws/${chatRoomId}/`)
+chatSocket = new WebSocket(`ws://${window.location.host}/ws/bookmyhotel/${chatRoomId}/`)
 
 chatSocket.onopen = (e) => {
     console.log('onOpen - websocket was opened')

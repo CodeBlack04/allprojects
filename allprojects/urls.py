@@ -24,4 +24,5 @@ urlpatterns = [
     path('', include('core.urls')),
     path('admin/', admin.site.urls),
     path('bookmyhotel/', include('bookmyhotel.urls')),
+    path('shopmart/', include('shopmart.urls')),
 ] + static(settings.MEDIA_URL, document_root = settings.MEDIA_ROOT)
