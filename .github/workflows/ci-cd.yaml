@@ -19,7 +19,7 @@ jobs:
     - name: Set up Python
       uses: actions/setup-python@v2
       with:
-        python-version: 3.9
+        python-version: 3.10.12
 
     - name: Install Dependencies
       run: |
@@ -27,5 +27,7 @@ jobs:
         pip install -r requirements.txt
 
     - name: Run Tests
+      env:
+        SECRET_KEY: django-insecure-u(am_dnhvxwvfo!j$%c*c3(fx*(hqi87&dd$ku!n+6#7ok&f6u
       run: |
         python3 manage.py test
