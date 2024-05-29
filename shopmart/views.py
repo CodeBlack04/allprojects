@@ -273,7 +273,7 @@ def create_checkout_session(request, product_pk):
                 )
                 # reserve the product
                 product.reserve(request.user)
-                print('Product is reserved')
+                # print('Product is reserved')
 
                 return JsonResponse({'sessionId': checkout_session['id']})
             except Exception as e:
