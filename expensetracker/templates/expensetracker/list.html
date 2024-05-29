@@ -1,0 +1,36 @@
+{% extends 'expensetracker/base.html' %}
+
+{% load humanize %}
+
+{% block title %}All Transactions{% endblock %}
+
+{% block content %}
+<div id="transactions" class="w-full h-full md:w-4/5 lg:w-3/5 mx-auto rounded-xl text-emerald-600 flex flex-col justify-center">
+    <h1 class="text-center p-5 text-3xl font-semibold">All Transactions</h1>
+    {% if transactions %}
+
+    <div class="w-full md:w-4/5 mx-auto mb-3 flex justify-between px-8 py-2 rounded-xl text-xl font-semibold">
+        <div class="w-1/3 text-center inline-block">Name</div>
+        <div class="w-1/3 text-center inline-block">Category</div>
+        <div class="w-1/3 text-center inline-block">Amount</div>
+    </div>
+
+    <div id="transaction-list" class="w-full md:w-4/5 px-5 mb-3 mx-auto rounded-xl flex flex-col justify-normal gap-4 overflow-auto">
+        {% for transaction in transactions %}
+        <div class="flex justify-between px-3 py-2 rounded-xl bg-emerald-800 text-lg font-semibold {% if transaction.type == 'IN' %} text-green-700 {% else %} text-red-700 {% endif %}">
+            <div class="w-1/3 text-center inline-block">{{transaction.name}}</div>
+            <div class="w-1/3 text-center inline-block">{{transaction.category}}</div>
+            <div class="w-1/3 text-center inline-block">{% if transaction.type == 'IN' %} +{{transaction.amount|intcomma}} {% else %} -{{transaction.amount|intcomma}} {% endif %}</div>
+        </div>
+        {% endfor %}
+
+    </div>
+    {% else %}
+
+    <div class="text-center text-2xl font-semibold">
+        <p>Add a transaction to see recent transactions</p>
+    </div>
+
+    {% endif %}
+</div>
+{% endblock %}

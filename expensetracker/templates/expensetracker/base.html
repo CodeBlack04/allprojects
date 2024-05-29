@@ -1,0 +1,107 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://cdn.tailwindcss.com"></script>
+    {% block head %}
+    {% endblock %}
+    <link href="https://cdn.jsdelivr.net/npm/remixicon@3.5.0/fonts/remixicon.css" rel="stylesheet">
+    <title>{% block title %}{% endblock %} | Tracker</title>
+</head>
+<body class="h-screen bg-gray-600 bg-teal-950 flex">
+
+    <nav id="navbar" class="h-full hidden lg:block z-10 w-[300px] h-full py-5 px-5 rounded-xl bg-emerald-950">
+
+        <div id="profile" class="mb-5 p-4 rounded-xl flex justify-even align-items gap-5 bg-emerald-800 border border-black">
+                <img src="{% static 'expensetracker/images/user_photo.jpg' %}" alt="profile-photo" class="h-14 rounded-full border border-black">
+                <div>
+                    <h1 class="text-xl text-black font-bold">{{request.user.name}}</h1>
+                    <a href="{% url 'expensetracker:dashboard' %}"><p class="text-xl font-semibold">ExpTracker</p></a>
+                </div>
+        </div>
+
+        <div id="catalog" class="text-xl font-semibold whitespace-nowrap p-4 border border-black flex flex-col items-start gap-5 rounded-xl bg-emerald-800">
+            
+            <a href="{% url 'expensetracker:dashboard' %}" class="hover:scale-95 transition duration-300 ease-in-out {% if request.path == '/' %} scale-95 text-gray-800 {% endif %}">Dashboard</a>
+            <a href="{% url 'expensetracker:analytics' %}" class="hover:scale-95 transition duration-300 ease-in-out {% if request.path == '/transactions/analytics/' %} scale-95 text-gray-800 {% endif %}">Analytics</a>
+            <a href="{% url 'expensetracker:new' %}" class="hover:scale-95 transition duration-300 ease-in-out {% if request.path == '/transactions/new/' %} scale-95 text-gray-800 {% endif %}">New Transaction</a>
+            <a href="{% url 'expensetracker:list' %}" class="hover:scale-95 transition duration-300 ease-in-out {% if request.path == '/transactions/list/' %} scale-95 text-gray-800 {% endif %}">All Transactions</a>
+            <a href="{% url 'expensetracker:incomes' %}" class="hover:scale-95 transition duration-300 ease-in-out {% if request.path == '/transactions/incomes/' %} scale-95 text-gray-800 {% endif %}">Incomes</a>
+            <a href="{% url 'expensetracker:expenses' %}" class="hover:scale-95 transition duration-300 ease-in-out {% if request.path == '/transactions/expenses/' %} scale-95 text-gray-800 {% endif %}">Expenses</a>
+            
+        </div>
+
+        <div class="p-4 absolute bottom-4">
+            {% if request.user.is_authenticated %}
+            <a href="{% url 'core:logout' %}" class="px-6 py-3 text-lg font-semibold bg-red-500 text-stale-200 rounded-xl hover:bg-red-600 border border-black">Logout</a>
+            {% else %}
+            <a href="{% url 'core:login' %}" class="px-6 py-3 text-lg font-semibold bg-emerald-800 text-stale-200 rounded-xl hover:bg-emerald-900 border border-black">LogIn</a>
+            <a href="{% url 'core:signup' %}" class="px-6 py-3 text-lg font-semibold bg-emerald-800 text-stale-200 rounded-xl hover:bg-emerald-900 border border-black">SignUp</a>
+            {% endif %}
+
+        </div>
+
+    </nav>
+
+    <div id="menu_icon" class="absolute top-5 left-8 lg:hidden z-10">
+        <button class="scale-125 hover:scale-150 font-bold transition duration-300 ease-in-out" onclick="toggleMenu()"><i class="ri-menu-line"></i></button>
+    </div>
+
+    <div class="w-full lg:max-w-7xl h-full xl:w-10/12 mx-auto my-auto p-4 rounded-xl lg:flex lg:items-center" onclick="hideMenu()">
+        {% block content %}
+
+        {% endblock %}
+    </div>
+
+    {% block scripts %}
+    
+    {% endblock %}
+
+    <script>
+        function toggleMenu () {
+            var menuElement = document.getElementById('navbar');
+            var menuIconElement = document.getElementById('menu_icon')
+
+            if (menuElement.classList.contains('hidden')) {
+                menuElement.classList.remove('hidden');
+                menuElement.classList.add('absolute');
+                menuElement.classList.add('block');
+
+                menuIconElement.classList.remove('left-8');
+                menuIconElement.classList.remove('top-5');
+                menuIconElement.classList.add('left-60')
+                menuIconElement.classList.add('top-12')
+            } else {
+                menuElement.classList.add('hidden');
+                menuElement.classList.remove('block');
+                menuElement.classList.remove('absolute');
+
+                menuIconElement.classList.remove('left-60');
+                menuIconElement.classList.remove('top-12');
+                menuIconElement.classList.add('left-8')
+                menuIconElement.classList.add('top-5')
+            } 
+        }
+
+        function hideMenu () {
+            var menuElement = document.getElementById('navbar');
+            var menuIconElement = document.getElementById('menu_icon')
+
+            if (menuElement.classList.contains('block')) {
+                menuElement.classList.add('hidden');
+                menuElement.classList.remove('block');
+                menuElement.classList.remove('absolute');
+
+                menuIconElement.classList.remove('left-60');
+                menuIconElement.classList.remove('top-12');
+                menuIconElement.classList.add('left-8')
+                menuIconElement.classList.add('top-5')
+            }
+        }
+    </script>
+
+</body>
+</html>

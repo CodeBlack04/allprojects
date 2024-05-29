@@ -1,0 +1,185 @@
+{% extends 'expensetracker/base.html' %}
+
+{% load humanize %}
+
+
+{% block head %}
+<script src="https://code.highcharts.com/highcharts.js"></script>
+{% endblock %}
+
+
+{% block title %}Dashboard{% endblock %}
+
+
+{% block content %}
+<div id="dashboard" class="w-full flex flex-col lg:flex-row items-center">
+
+    <div id="summary" class="w-full md:w-4/5 lg:w-3/5 rounded-xl flex flex-col gap-4">
+
+        <div id="chart-container" class="w-full h-96 rounded-xl bg-teal-900"></div>
+
+        <div id="overview" class="w-full h-max rounded-xl grid grid-cols-2 gap-4">
+            <div id="income" class="p-4 rounded-xl bg-green-900 flex flex-col justify-even">
+                <h1 class="text-3xl font-semibold">Total Income</h1>
+                <P class="p-4 text-5xl text-center font-bold">+{{total_income|intcomma}}</P>
+            </div>
+    
+            <div id="expense" class="p-4 rounded-xl bg-red-500 flex flex-col justify-even">
+                <h1 class="text-3xl font-semibold">Total Expense</h1>
+                <P class="p-4 text-5xl text-center font-bold">-{{total_expense|intcomma}}</P>
+            </div>
+
+            <div id="balance" class="col-span-2 p-4 rounded-xl {% if total_balance > 0 %} bg-green-900 {% else %} bg-red-500 {% endif %} flex flex-col justify-even">
+                <h1 class="text-3xl font-semibold">Total Balance</h1>
+                <P class="p-4 text-5xl text-center font-bold">{% if total_balance > 0 %} +{{total_balance|intcomma}} {% else %} {{total_balance|intcomma}} {% endif %}</P>
+            </div>
+        </div>
+
+    </div>
+
+    <div id="details" class="w-full md:w-4/5 lg:w-2/5 m-4 mx-auto rounded-xl flex flex-col gap-6">
+
+        <div id="recent_history" class="p-4 rounded-xl text-emerald-600">
+            <h1 class="text-center pb-5 text-3xl font-semibold">Recent History</h1>
+            {% if recent_history %}
+            <div class="rounded-xl flex flex-col gap-4">
+
+                {% for transaction in recent_history %}
+                <div class="flex justify-between px-3 py-2 rounded-xl bg-emerald-800 text-lg font-semibold {% if transaction.type == 'IN' %} text-green-700 {% else %} text-rose-700 {% endif %}">
+                    <div class="w-1/3 my-auto text-center">{{transaction.name}}</div>
+                    <div class="w-1/3 my-auto text-center">{{transaction.category}}</div>
+                    <div class="w-1/3 my-auto text-center">{% if transaction.type == 'IN' %} +{{transaction.amount|intcomma}} {% else %} -{{transaction.amount|intcomma}} {% endif %}</div>
+                </div>
+                {% endfor %}
+
+            </div>
+            {% else %}
+
+            <div>
+                <p>Add a transaction to see recent transactions</p>
+            </div>
+
+            {% endif %}
+        </div>
+
+        <div id="income-category" class="p-4 rounded-xl text-black flex flex-col gap-4">
+
+            <div class="flex justify-between items-center rounded-xl text-emerald-600">
+                <div class="w-3/12 text-center inline-block font-semibold">Min</div>
+                <div class="w-6/12 text-center text-2xl font-semibold inline-block font-semibold">Income Category</div>
+                <div class="w-3/12 text-center inline-block font-semibold">Max</div>
+            </div>
+            <div class="py-2 flex justify-between items-center rounded-xl bg-emerald-800">
+                <div class="w-3/12 text-center inline-block font-semibold">{{lowest_income_category}}</div>
+                <div class="w-6/12 text-center text-2xl font-semibold inline-block font-semibold"></div>
+                <div class="w-3/12 text-center inline-block font-semibold">{{highest_income_category}}</div>
+            </div>
+
+        </div>
+
+        <div id="expense-category" class="p-4 rounded-xl text-black flex flex-col gap-4">
+
+            <div class="flex justify-between items-center rounded-xl text-emerald-600">
+                <div class="w-3/12 text-center inline-block font-semibold">Min</div>
+                <div class="w-6/12 text-center text-2xl font-semibold inline-block font-semibold">Expense Category</div>
+                <div class="w-3/12 text-center inline-block font-semibold">Max</div>
+            </div>
+            <div class="py-2 flex justify-between items-center rounded-xl bg-emerald-800">
+                <div class="w-3/12 text-center inline-block font-semibold">{{lowest_expense_category}}</div>
+                <div class="w-6/12 text-center text-2xl font-semibold inline-block font-semibold"></div>
+                <div class="w-3/12 text-center inline-block font-semibold">{{highest_expense_category}}</div>
+            </div>
+
+        </div>
+
+    </div>
+
+</div>        
+{% endblock %}
+
+
+{% block scripts %}
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        // Fetch data from your Django backend
+        fetch('/expensetracker/chart-data/')
+            .then((response) => response.json())
+            .then((data) => {
+                
+                Highcharts.chart('chart-container', {
+                    chart: {
+                        type: 'areaspline',
+                        backgroundColor: null,
+                        style: {
+                            color: '#000000' // Set text color to black
+                        }
+                    },
+                    title: {
+                        text: data.label,
+                        align: 'center',
+                        style: {
+                            color: '#000000' // Text color for title
+                        }
+                    },
+                    legend: {
+                        layout: 'horizontal',
+                        align: 'left',
+                        verticalAlign: 'top',
+                        x: 120,
+                        y: 35,
+                        floating: true,
+                        borderWidth: 0,
+                        backgroundColor: null,
+                        itemStyle: {
+                            color: '#000000' 
+                        }
+                    },
+                    xAxis: {
+                        // categories: data.labels,
+                        visible: false,
+                        labels: {
+                            style: {
+                                color: '#000000' 
+                            }
+                        },
+                        gridLineWidth: 0
+                    },
+                    yAxis: {
+                        title: {
+                            text: 'Amount',
+                            style: {
+                                color: '#000000'
+                            }
+                        },
+                        labels: {
+                            style: {
+                                color: '#000000' 
+                            }
+                        },
+                        gridLineWidth: 0
+                    },
+                    tooltip: {
+                        shared: false,
+                    },
+                    credits: {
+                        enabled: false
+                    },
+                    plotOptions: {
+                        areaspline: {
+                            fillOpacity: 0.5
+                        }
+                    },
+                    series: [{
+                        name: 'Income',
+                        data: data.income_values,
+                        color: 'rgb(21 128 61)'
+                    }, {
+                        name: 'Expense',
+                        data: data.expense_values,
+                        color: 'rgb(190 18 60)'
+                    }]
+                });
+            });
+    });
+</script>
+{% endblock %}
