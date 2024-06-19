@@ -21,8 +21,8 @@
             <nav class="w-4/5 mx-auto mt-2 px-3 py-3 flex justify-between items-center rounded-full shadow-2xl bg-gradient-to-bl from-gray-700 to-slate-800">
                 
                 <div class="flex justify-start items-center">
-                    <img src="" alt="logo" class="w-10 h-10">
-                    <a href="{% url 'core:welcome_page' %}"  class="text-xl text-slate-400 font-semibold">All Projects</a>
+                    <img src="/media/logo.png" alt="logo" class="w-10 h-10">
+                    <a href="{% url 'core:welcome_page' %}"  class="text-xl text-slate-400 font-semibold pl-5">Projects</a>
                 </div>    
 
                 <div class="flex items-center space-x-4">
@@ -31,10 +31,6 @@
                     {% else %}
                         <a href="{% url 'core:signup' %}" class="inline-block w-20 text-center text-sm px-3 py-2 bg-gray-600 rounded-full shadow-2xl hover:bg-gray-800 transition ease-in-out duration-300">Signup</a>
                         <a href="{% url 'core:login' %}" class="inline-block w-20 text-center text-sm px-3 py-2 bg-gray-600 rounded-full shadow-2xl hover:bg-gray-800 transition ease-in-out duration-300">Login</a>
-                    {% endif %}
-
-                    {% if request.user.is_staff %}
-                        <a href="{% url 'bookmyhotel:admin' %}" class="inline-block px-3 py-2 text-sm bg-gray-600 rounded-full shadow-2xl hover:bg-gray-800 transition ease-in-out duration-300">Admin</a>
                     {% endif %}
                 </div>
             </nav>
