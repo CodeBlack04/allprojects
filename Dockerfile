@@ -34,4 +34,4 @@ USER appuser
 EXPOSE 8000
 
 # Command to run the application
-CMD ["gunicorn", "-w", "3", "-k", "uvicorn.workers.UvicornWorker", "-b", "0.0.0.0:8000", "allprojects.wsgi:application"]
+CMD ["gunicorn", "-w", "3", "-k", "uvicorn.workers.UvicornWorker", "-b", "0.0.0.0:8000", "allprojects.asgi:application"]
