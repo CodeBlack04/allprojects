@@ -3,8 +3,9 @@ FROM python:3.11-slim
 
 # Set environment variables for Python
 ENV PYTHONUNBUFFERED=1 \
-    PYTHONDONTWRITEBYTECODE=1 \
-    PATH="/home/appuser/.local/bin:$PATH"
+    PYTHONDONTWRITEBYTECODE=1
+
+ENV DJANGO_SETTINGS_MODULE="allprojects.settings"
 
 # Install system dependencies
 RUN apt-get update && apt-get install -y --no-install-recommends \
@@ -15,7 +16,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 
 # Create a non-root user
 RUN useradd --create-home appuser
-WORKDIR /home/appuser
+WORKDIR /webapps/allprojects
 
 # Install Python dependencies
 COPY requirements.txt .
@@ -25,11 +26,11 @@ RUN pip install python-dotenv gunicorn 'uvicorn[standard]'
 # Copy project files
 COPY . .
 
-# Collect static files
+# Collet Static Files
 RUN python3 manage.py collectstatic --noinput
 
 # Change ownership of the application directory
-RUN chown -R appuser:appuser /home/appuser
+RUN chown -R appuser:appuser /webapps
 USER appuser
 
 # Expose application port
