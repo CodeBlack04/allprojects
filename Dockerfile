@@ -21,10 +21,12 @@ WORKDIR /home/appuser
 COPY requirements.txt .
 RUN pip install --upgrade pip && pip install --no-cache-dir -r requirements.txt
 RUN pip install python-dotenv gunicorn 'uvicorn[standard]'
-RUN python3 manage.py collectstatic --noinput
 
 # Copy project files
 COPY . .
+
+# Collect static files
+RUN python3 manage.py collectstatic --noinput
 
 # Change ownership of the application directory
 RUN chown -R appuser:appuser /home/appuser
